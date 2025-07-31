@@ -26,7 +26,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Spring全家桶 -->
-        <spring-boot.version>3.5.3</spring-boot.version>
+        <spring-boot.version>3.4.3</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.2</spring-cloud-alibaba.version>
 
@@ -51,6 +51,9 @@
         <logback.version>1.5.15</logback.version>
 
         <swagger.version>3.0.0</swagger.version>
+
+        <openfeign.version>3.1.1</openfeign.version>
+        <loadbalancer.version>3.1.1</loadbalancer.version>
 
     </properties>
 
@@ -142,6 +145,32 @@
                 <version>${swagger.version}</version>
             </dependency>
 
+            <!-- nacos -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${spring-cloud-alibaba.version}</version>
+            </dependency>
+
+            <!-- openfeign -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${openfeign.version}</version>
+            </dependency>
+
+            <!-- loadbalancer -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+                <version>${loadbalancer.version}</version>
+            </dependency>
+
             <!-- 公共模块 -->
             <dependency>
                 <groupId>com.leo</groupId>
@@ -158,6 +187,8 @@
                 <artifactId>common-mybatis</artifactId>
                 <version>1.0.0</version>
             </dependency>
+
+
 
 
 
