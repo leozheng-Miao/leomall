@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 命名空间必须与TestEntityMapper接口接口的全类名一致 -->
+<mapper namespace="com.leo.commonmybatis.config.TestEntityMapper">
+
+    <!-- 结果集映射，与你的BaseEntity字段对应 -->
+    <resultMap type="com.leo.commonmybatis.config.TestEntity" id="TestEntityResult">
+        <id     property="id"          column="id"           />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="name"        column="name"         />
+        <result property="createTime"  column="create_time"  />
+        <result property="updateTime"  column="update_time"  />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"      column="remark"       />
+        <result property="deleted"     column="deleted"      />
+        <result property="version"     column="version"      />
+    </resultMap>
+
+    <!-- 批量插入语句 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO test_entity (
+        id,
+        tenant_id,
+        name,
+        create_time,
+        update_time,
+        create_by,
+        update_by,
+        remark,
+        deleted,
+        version
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.id},
+            #{item.tenantId},
+            #{item.name},
+            #{item.createTime},
+            #{item.updateTime},
+            #{item.createBy},
+            #{item.updateBy},
+            #{item.remark},
+            #{item.deleted},
+            #{item.version}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
