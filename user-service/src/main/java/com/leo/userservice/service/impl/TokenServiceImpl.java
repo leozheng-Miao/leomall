@@ -1,20 +1,18 @@
 package com.leo.userservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.leo.commoncore.constant.RedisConstants;
 import com.leo.commoncore.constant.TokenConstants;
 import com.leo.commoncore.enums.ResponseEnum;
 import com.leo.commoncore.exception.BizException;
 import com.leo.commonredis.util.RedisUtil;
 import com.leo.commonsecurity.util.JwtUtil;
-import com.leo.userservice.dto.TokenResponse;
+import com.leo.userservice.dto.response.TokenResponse;
 import com.leo.userservice.entity.Permission;
 import com.leo.userservice.entity.Role;
 import com.leo.userservice.entity.User;
 import com.leo.userservice.mapper.UserMapper;
 import com.leo.userservice.service.TokenService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TokenServiceImpl extends ServiceImpl<UserMapper, User> implements TokenService {
+public class TokenServiceImpl implements TokenService {
 
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;

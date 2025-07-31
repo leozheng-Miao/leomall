@@ -1,8 +1,7 @@
 package com.leo.userservice.service;
 
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.leo.userservice.dto.TokenResponse;
+import com.leo.userservice.dto.response.TokenResponse;
 import com.leo.userservice.entity.User;
 
 /**
@@ -11,7 +10,7 @@ import com.leo.userservice.entity.User;
  * @author Miao Zheng
  * @date 2025-01-30
  */
-public interface TokenService extends IService<User> {
+public interface TokenService {
 
     /**
      * 创建Token
