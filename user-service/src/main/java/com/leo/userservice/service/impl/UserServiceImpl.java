@@ -7,6 +7,7 @@ import com.leo.commoncore.constant.UserConstants;
 import com.leo.commoncore.enums.ResponseEnum;
 import com.leo.commoncore.exception.BizException;
 
+import com.leo.userservice.converter.UserConverter;
 import com.leo.userservice.dto.request.LoginRequest;
 import com.leo.userservice.dto.request.RegisterRequest;
 import com.leo.userservice.dto.response.TokenResponse;
@@ -41,6 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final TokenService tokenService;
     private final LoginLogService loginLogService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final UserConverter userConverter;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -66,18 +68,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 创建用户
-        User user = new User();
-        user.setUsername(request.getUsername());
+        User user = userConverter.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setPhone(request.getPhone());
-        user.setEmail(request.getEmail());
-        user.setNickname(StrUtil.isNotBlank(request.getNickname()) ? request.getNickname() : request.getUsername());
-        user.setUserType(UserConstants.USER_TYPE_BUYER); // 默认为买家
-        user.setStatus(UserConstants.STATUS_NORMAL);
-        user.setRegisterSource("PC");
-        user.setLoginCount(0);
-        user.setFailedLoginAttempts(0);
-
         // 保存用户
         userMapper.insert(user);
 
@@ -103,7 +95,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            System.out.println("密码错误");
             // 增加失败次数
             userMapper.incrementFailedAttempts(user.getId());
             // 记录登录失败日志

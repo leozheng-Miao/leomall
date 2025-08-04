@@ -7,6 +7,7 @@ import com.leo.commoncore.enums.ResponseEnum;
 import com.leo.commoncore.exception.BizException;
 import com.leo.commonredis.util.RedisUtil;
 import com.leo.commonsecurity.util.JwtUtil;
+import com.leo.userservice.converter.UserConverter;
 import com.leo.userservice.dto.response.TokenResponse;
 import com.leo.userservice.entity.Permission;
 import com.leo.userservice.entity.Role;
@@ -36,6 +37,7 @@ public class TokenServiceImpl implements TokenService {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
     private final UserMapper userMapper;
+    private final UserConverter userConverter;
 
     @Override
     public TokenResponse createToken(User user, String deviceId, String deviceType, boolean rememberMe) {
@@ -74,21 +76,17 @@ public class TokenServiceImpl implements TokenService {
         // 缓存用户权限信息
         cacheUserPermissions(user.getId(), roleList, permissionList);
 
+        TokenResponse.UserInfo userInfo = userConverter.toUserInfo(user);
+        userInfo.setRoles(roleList.toArray(new String[0]));
+        userInfo.setPermissions(permissionList.toArray(new String[0]));
+
         // 构建响应
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .expiresIn(rememberMe ? TokenConstants.REFRESH_TOKEN_EXPIRE : TokenConstants.ACCESS_TOKEN_EXPIRE)
-                .userInfo(TokenResponse.UserInfo.builder()
-                        .userId(user.getId())
-                        .username(user.getUsername())
-                        .nickname(user.getNickname())
-                        .avatar(user.getAvatar())
-                        .userType(user.getUserType())
-                        .roles(roleList.toArray(new String[0]))
-                        .permissions(permissionList.toArray(new String[0]))
-                        .build())
+                .userInfo(userInfo)
                 .build();
     }
 
