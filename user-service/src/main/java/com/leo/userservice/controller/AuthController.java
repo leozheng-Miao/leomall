@@ -49,6 +49,7 @@ public class AuthController {
     @Operation(summary = "用户登录")
     public R<TokenResponse> login(@Validated @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         String loginIp = JakartaServletUtil.getClientIP(httpRequest);
+        System.out.println(loginIp);
         TokenResponse response = userService.login(request, loginIp);
         return R.success(response);
     }
@@ -72,21 +73,21 @@ public class AuthController {
 
     @GetMapping("/check/username")
     @Operation(summary = "检查用户名是否可用")
-    public R<Boolean> checkUsername(@Parameter(description = "用户名") @RequestParam String username) {
+    public R<Boolean> checkUsername(@Parameter(description = "用户名") @RequestParam("username") String username) {
         boolean exists = userService.existsByUsername(username);
         return R.success(!exists);
     }
 
     @GetMapping("/check/phone")
     @Operation(summary = "检查手机号是否可用")
-    public R<Boolean> checkPhone(@Parameter(description = "手机号") @RequestParam String phone) {
+    public R<Boolean> checkPhone(@Parameter(description = "手机号") @RequestParam("phone") String phone) {
         boolean exists = userService.existsByPhone(phone);
         return R.success(!exists);
     }
 
     @GetMapping("/check/email")
     @Operation(summary = "检查邮箱是否可用")
-    public R<Boolean> checkEmail(@Parameter(description = "邮箱") @RequestParam String email) {
+    public R<Boolean> checkEmail(@Parameter(description = "邮箱") @RequestParam("email") String email) {
         boolean exists = userService.existsByEmail(email);
         return R.success(!exists);
     }

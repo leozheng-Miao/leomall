@@ -79,7 +79,6 @@
         <dependency>
             <groupId>com.leo</groupId>
             <artifactId>common-swagger</artifactId>
-            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.leo</groupId>
@@ -88,7 +87,6 @@
         <dependency>
             <groupId>com.leo</groupId>
             <artifactId>common-redis</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <!-- mybatis plus -->
@@ -109,15 +107,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
             <version>3.1.8</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
+
 
     </dependencies>
 

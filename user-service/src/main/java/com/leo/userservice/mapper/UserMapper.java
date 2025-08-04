@@ -1,6 +1,5 @@
 package com.leo.userservice.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.leo.commonmybatis.mapper.BaseMapperPlus;
 import com.leo.userservice.entity.Permission;
 import com.leo.userservice.entity.Role;
@@ -8,6 +7,7 @@ import com.leo.userservice.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Mapper
 public interface UserMapper extends BaseMapperPlus<User> {
+
 
     /**
      * 根据用户ID查询角色列表
@@ -56,7 +57,7 @@ public interface UserMapper extends BaseMapperPlus<User> {
      * @param loginIp 登录IP
      * @return 更新结果
      */
-    @Select("""
+    @Update("""
         UPDATE sys_user 
         SET last_login_time = NOW(), 
             last_login_ip = #{loginIp}, 

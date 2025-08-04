@@ -38,4 +38,16 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+#swagger:
+#  enabled: true
+#  title: ????API??
+#  description: ??????????
+#  version: 1.0.0
+#  contact:
+#    name: Miao Zheng
+#    email: miao.zheng@foxmail.com
+#    url: https://github.com/miaozheng
+#  license:
+#    name: Apache 2.0
+#    url: https://www.apache.org/licenses/LICENSE-2.0.html
 

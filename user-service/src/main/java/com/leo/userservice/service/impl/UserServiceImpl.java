@@ -103,6 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.out.println("密码错误");
             // 增加失败次数
             userMapper.incrementFailedAttempts(user.getId());
             // 记录登录失败日志
@@ -149,6 +150,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            System.out.println("密码错误");
             userMapper.incrementFailedAttempts(user.getId());
             loginLogService.recordLoginLog(user.getId(), user.getUsername(), "PASSWORD", loginIp, false, "密码错误");
             throw new BizException(ResponseEnum.USER_PASSWORD_ERROR);
@@ -180,6 +182,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public User getByUsername(String username) {
+        System.out.println("进入getByUsername方法");
         return userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getUsername, username)
                 .eq(User::getDeleted, 0));

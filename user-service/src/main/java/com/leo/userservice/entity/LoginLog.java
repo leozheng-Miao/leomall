@@ -33,7 +33,7 @@ public class LoginLog {
     /**
      * 登录类型：1-密码登录 2-短信登录 3-OAuth2
      */
-    private String loginType;
+    private int loginType;
 
     /**
      * 登录IP

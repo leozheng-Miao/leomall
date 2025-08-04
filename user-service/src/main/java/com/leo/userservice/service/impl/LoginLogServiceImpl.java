@@ -1,7 +1,6 @@
 package com.leo.userservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 
@@ -36,11 +35,25 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
     @Async
     public void recordLoginLog(Long userId, String username, String loginType, 
                               String loginIp, boolean success, String message) {
+        int integerLoginType = 0;
+        switch (loginType) {
+            case "PASSWORD":
+                integerLoginType = 1;
+                break;
+            case "SMS":
+                integerLoginType = 2;
+                break;
+            case "OAuth2":
+                integerLoginType = 3;
+                break;
+            default:
+                integerLoginType = 1;
+        }
         try {
             LoginLog loginLog = new LoginLog();
             loginLog.setUserId(userId);
             loginLog.setUsername(username);
-            loginLog.setLoginType(loginType);
+            loginLog.setLoginType(integerLoginType);
             loginLog.setLoginIp(loginIp);
             loginLog.setStatus(success ? 1 : 0);
             loginLog.setMessage(message);

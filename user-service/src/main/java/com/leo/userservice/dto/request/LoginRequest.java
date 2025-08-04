@@ -15,11 +15,11 @@ import jakarta.validation.constraints.NotBlank;
 @Schema(description = "用户登录请求")
 public class LoginRequest {
 
-    @Schema(description = "账号（用户名/手机号/邮箱）", required = true)
+    @Schema(description = "账号（用户名/手机号/邮箱）", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "账号不能为空")
     private String account;
 
-    @Schema(description = "密码", required = true)
+    @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "密码不能为空")
     private String password;
 

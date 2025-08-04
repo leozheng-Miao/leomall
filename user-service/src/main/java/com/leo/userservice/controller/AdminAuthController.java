@@ -37,6 +37,7 @@ public class AdminAuthController {
     @Operation(summary = "管理员登录")
     public R<TokenResponse> login(@Validated @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
         String loginIp = JakartaServletUtil.getClientIP(httpRequest);
+        System.out.println(loginIp);
         TokenResponse response = userService.adminLogin(request, loginIp);
         return R.success(response);
     }

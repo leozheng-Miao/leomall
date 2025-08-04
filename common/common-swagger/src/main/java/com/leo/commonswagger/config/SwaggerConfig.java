@@ -96,7 +96,7 @@ public class SwaggerConfig {
     public GroupedOpenApi adminApi() {
         return GroupedOpenApi.builder()
                 .group("管理端接口")
-                .pathsToMatch("/admin/**")
+                .pathsToMatch("/admin/api/v1/**")
                 .build();
     }
 

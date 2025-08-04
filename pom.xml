@@ -42,18 +42,19 @@
         <lombok.version>1.18.36</lombok.version>
         <hutool.version>5.8.29</hutool.version>
         <jakarta.validation.version>3.1.0</jakarta.validation.version>
+        <mapstruct.version>1.5.5.Final</mapstruct.version>
 
         <!-- API文档 -->
-        <springdoc.version>2.3.0</springdoc.version>
+        <springdoc.version>2.8.0</springdoc.version>
 
         <!-- 其他 -->
         <slf4j.version>2.0.16</slf4j.version>
+
         <logback.version>1.5.15</logback.version>
-
-        <swagger.version>3.0.0</swagger.version>
-
         <openfeign.version>3.1.1</openfeign.version>
         <loadbalancer.version>3.1.1</loadbalancer.version>
+
+        <jackson.version>2.16.1</jackson.version>
 
     </properties>
 
@@ -134,15 +135,13 @@
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
                 <version>${springdoc.version}</version>
             </dependency>
-
-            <!-- Swagger -->
             <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-boot-starter</artifactId>
-                <version>${swagger.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
 
             <!-- nacos -->
@@ -171,6 +170,23 @@
                 <version>${loadbalancer.version}</version>
             </dependency>
 
+            <!-- Jackson 依赖 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- MapStruct 核心依赖 -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+
             <!-- 公共模块 -->
             <dependency>
                 <groupId>com.leo</groupId>
@@ -187,8 +203,16 @@
                 <artifactId>common-mybatis</artifactId>
                 <version>1.0.0</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>com.leo</groupId>
+                <artifactId>common-swagger</artifactId>
+                <version>1.0.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.leo</groupId>
+                <artifactId>common-redis</artifactId>
+                <version>1.0.0</version>
+            </dependency>
 
 
 
@@ -227,10 +251,22 @@
                     <target>${java.version}</target>
                     <encoding>UTF-8</encoding>
                     <annotationProcessorPaths>
+                        <!-- MapStruct注解处理器 -->
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
+                        </path>
+                        <!-- Lombok与MapStruct兼容处理器 -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>0.2.0</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
