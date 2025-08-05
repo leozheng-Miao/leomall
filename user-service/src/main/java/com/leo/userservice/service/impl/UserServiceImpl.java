@@ -175,8 +175,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User getByUsername(String username) {
         System.out.println("进入getByUsername方法");
         return userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, username)
-                .eq(User::getDeleted, 0));
+                .eq(User::getUsername, username));
+//                .eq(User::getDeleted, 0));
     }
 
     @Override

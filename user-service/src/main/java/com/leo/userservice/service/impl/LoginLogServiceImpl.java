@@ -33,7 +33,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
 
     @Override
     @Async
-    public void recordLoginLog(Long userId, String username, String loginType, 
+    public void recordLoginLog(Long userId, String username, String loginType,
                               String loginIp, boolean success, String message) {
         int integerLoginType = 0;
         switch (loginType) {
@@ -73,6 +73,9 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
                 
                 // 获取登录地点（实际项目中可以调用IP地址解析服务）
                 loginLog.setLoginLocation(getLocationByIp(loginIp));
+                System.out.println(loginLog.getLoginLocation());
+                System.out.println("******************");
+
             }
 
             loginLogMapper.insert(loginLog);

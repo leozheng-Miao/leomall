@@ -73,7 +73,7 @@ public interface UserMapper extends BaseMapperPlus<User> {
      * @param userId 用户ID
      * @return 更新结果
      */
-    @Select("""
+    @Update("""
         UPDATE sys_user 
         SET failed_login_attempts = failed_login_attempts + 1
         WHERE id = #{userId}
