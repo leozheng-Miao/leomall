@@ -44,6 +44,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserConverter userConverter;
 
+    /**
+     * 用户注册
+     *
+     * @param request 注册请求
+     * @return 用户信息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User register(RegisterRequest request) {

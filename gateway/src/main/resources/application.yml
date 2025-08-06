@@ -32,12 +32,34 @@ spring:
             allow-credentials: true
             max-age: 3600
       routes:
+#        - id: leomall-user-service
+#          uri: lb://leomall-user-service
+#          predicates:
+#            - Path=/api/**, /admin/api/**
+##            - Path=/api/v1/user/**
+#          filters:
+#            - StripPrefix=1
         - id: leomall-user-service
           uri: lb://leomall-user-service
           predicates:
-            - Path=/api/**, /admin/api/**
+              - Path=/user/**
+            #            - Path=/api/v1/user/**
+          filters:
+              - StripPrefix=1
+
+        - id: leomall-user-service-docs
+          uri: lb://leomall-user-service
+          predicates:
+            - Path=/user/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+        - id: openapi-ui
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/swagger-ui/**
           filters:
             - StripPrefix=0
+
   sentinel:
     transport:
       dashboard: 127.0.0.1:9113

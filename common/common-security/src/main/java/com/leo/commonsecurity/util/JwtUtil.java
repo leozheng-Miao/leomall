@@ -23,7 +23,7 @@ import java.util.*;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
+    @Value("${jwt.secret:mall-system-jwt-secret-key-2025-minimum-256-bits}")
     private static String secret = TokenConstants.SECRET;
 
     @Value("${jwt.access-token-expire:900}")  // 15分钟
