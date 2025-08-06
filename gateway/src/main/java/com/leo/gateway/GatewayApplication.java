@@ -2,8 +2,22 @@ package com.leo.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
+@SpringBootApplication(
+        exclude = {
+                DataSourceAutoConfiguration.class,
+                DataSourceTransactionManagerAutoConfiguration.class
+        }
+)
+@EnableDiscoveryClient
+@ComponentScan(basePackages = {
+        "com.leo.gateway",
+        "com.leo.commonsecurity"
+})
 public class GatewayApplication {
 
     public static void main(String[] args) {

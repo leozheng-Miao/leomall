@@ -13,7 +13,6 @@
 
     <modules>
         <module>gateway</module>
-        <module>auth</module>
         <module>user-service</module>
         <module>common</module>
     </modules>

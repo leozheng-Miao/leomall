@@ -1,0 +1,84 @@
+server:
+  port: 18000
+spring:
+  application:
+    name: leomall-gateway
+  profiles:
+    active: dev
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 3600
+      routes:
+        - id: leomall-user-service
+          uri: lb://leomall-user-service
+          predicates:
+            - Path=/api/**, /admin/api/**
+          filters:
+            - StripPrefix=0
+  sentinel:
+    transport:
+      dashboard: 127.0.0.1:9113
+      port: 8940
+      clientIp: 127.0.0.1
+    datasoure:
+      flow:
+        nacos:
+          server-addr: localhost:17748
+          namespace: mall-dev
+          data-id: gateway-flow-rules
+          group-id: DEFAULT_GROUP
+          data-type: json
+          rule-type: flow
+      degrade:
+        nacos:
+          server-addr: localhost:8848
+          namespace: mall-dev
+          data-id: gateway-degrade-rules
+          group-id: DEFAULT_GROUP
+          data-type: json
+          rule-type: degrade
+gateway:
+  white-list:
+    urls:
+      - /api/v1/auth/register
+      - /api/v1/auth/login
+      - /api/v1/auth/refresh
+      - /api/v1/auth/check/**
+      - /admin/api/v1/auth/login
+      - /admin/api/v1/auth/refresh
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /swagger-resources/**
+      - /webjars/**
+  jwt:
+    secret: ${JWT_SECRET:mall-system-jwt-secret-key-2025-minimum-256-bits}
+
+logging:
+  level:
+    com.leo.gateway: debug
+    org.springframework.cloud.gateway: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
