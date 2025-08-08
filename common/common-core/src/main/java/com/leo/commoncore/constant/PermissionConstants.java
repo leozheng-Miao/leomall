@@ -18,15 +18,43 @@ public interface PermissionConstants {
     String USER_RESET_PASSWORD = "user:reset-password";
     String USER_ASSIGN_ROLE = "user:assign-role";
 
-    // 商品管理
-    String GOODS_LIST = "goods:list";
-    String GOODS_VIEW = "goods:view";
-    String GOODS_CREATE = "goods:create";
-    String GOODS_UPDATE = "goods:update";
-    String GOODS_DELETE = "goods:delete";
-    String GOODS_STATUS = "goods:status";
-    String GOODS_AUDIT = "goods:audit";
-    String GOODS_PRICING = "goods:pricing";
+    // ========== 角色管理模块 ==========
+    String ROLE_VIEW = "role:view";
+    String ROLE_CREATE = "role:create";
+    String ROLE_UPDATE = "role:update";
+    String ROLE_DELETE = "role:delete";
+    String ROLE_ASSIGN = "role:assign";
+
+    // ========== 商品分类管理 ==========
+    String PRODUCT_CATEGORY_VIEW = "product:category:view";
+    String PRODUCT_CATEGORY_CREATE = "product:category:create";
+    String PRODUCT_CATEGORY_UPDATE = "product:category:update";
+    String PRODUCT_CATEGORY_DELETE = "product:category:delete";
+
+    // ========== 品牌管理 ==========
+    String PRODUCT_BRAND_VIEW = "product:brand:view";
+    String PRODUCT_BRAND_CREATE = "product:brand:create";
+    String PRODUCT_BRAND_UPDATE = "product:brand:update";
+    String PRODUCT_BRAND_DELETE = "product:brand:delete";
+
+    // ========== SPU管理 ==========
+    String PRODUCT_SPU_VIEW = "product:spu:view";
+    String PRODUCT_SPU_CREATE = "product:spu:create";
+    String PRODUCT_SPU_UPDATE = "product:spu:update";
+    String PRODUCT_SPU_DELETE = "product:spu:delete";
+    String PRODUCT_SPU_PUBLISH = "product:spu:publish";
+
+    // ========== SKU管理 ==========
+    String PRODUCT_SKU_VIEW = "product:sku:view";
+    String PRODUCT_SKU_CREATE = "product:sku:create";
+    String PRODUCT_SKU_UPDATE = "product:sku:update";
+    String PRODUCT_SKU_DELETE = "product:sku:delete";
+
+    // ========== 库存管理 ==========
+    String INVENTORY_VIEW = "inventory:view";
+    String INVENTORY_UPDATE = "inventory:update";
+    String INVENTORY_LOCK = "inventory:lock";
+
 
     // 订单管理
     String ORDER_LIST = "order:list";

@@ -3,6 +3,7 @@ package com.leo.commonredis.util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -497,5 +498,47 @@ public class RedisUtil {
             log.error("将list批量放入缓存并设置时间异常", e);
             return false;
         }
+    }
+
+    /**
+     * 根据pattern删除key
+     * 使用SCAN命令避免阻塞Redis
+     *
+     * @param pattern 匹配模式，支持通配符 * 和 ?
+     * @return 删除的key数量
+     */
+    public Long deleteByPattern(String pattern) {
+        if (pattern == null || pattern.isEmpty()) {
+            return 0L;
+        }
+
+        Set<String> keys = scanKeys(pattern);
+        if (keys != null && !keys.isEmpty()) {
+            return redisTemplate.delete(keys);
+        }
+        return 0L;
+    }
+
+    /**
+     * 使用SCAN命令扫描匹配的key
+     * 避免使用KEYS命令导致Redis阻塞
+     *
+     * @param pattern 匹配模式
+     * @return 匹配的key集合
+     */
+    public Set<String> scanKeys(String pattern) {
+        return redisTemplate.execute((connection) -> {
+            Set<String> keys = new java.util.HashSet<>();
+            ScanOptions options = ScanOptions.scanOptions()
+                    .match(pattern)
+                    .count(1000) // 每次扫描1000个key
+                    .build();
+
+            var cursor = connection.scan(options);
+            while (cursor.hasNext()) {
+                keys.add(new String(cursor.next()));
+            }
+            return keys;
+        }, true);
     }
 }
