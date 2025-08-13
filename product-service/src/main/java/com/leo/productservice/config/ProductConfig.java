@@ -1,8 +1,15 @@
 package com.leo.productservice.config;
 
+import com.leo.commonsecurity.aspect.AuthAspect;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 商品模块配置
@@ -18,8 +25,34 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableCaching
 @EnableTransactionManagement
-public class ProductConfig {
-    
-    // 这里可以添加其他Bean配置
-    // 例如：线程池、RestTemplate、WebClient等
+@RequiredArgsConstructor
+public class ProductConfig implements WebMvcConfigurer {
+
+    /**
+     * 配置权限检查AOP
+     * 这个Bean应该在common-security模块中已经定义
+     * 如果没有，需要在common-security中添加
+     */
+    @Bean
+    @ConditionalOnProperty(name = "security.auth.enable", havingValue = "true", matchIfMissing = true)
+    public AuthAspect authAspect() {
+        return new AuthAspect();
+    }
+
+    /**
+     * 配置Feign请求拦截器
+     * 用于服务间调用时传递用户信息
+     */
+//    @Bean
+//    public FeignRequestInterceptor feignRequestInterceptor() {
+//        return new FeignRequestInterceptor();
+//    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // Product模块不需要添加认证拦截器
+        // 认证在网关层完成
+    }
+
+
+
 }

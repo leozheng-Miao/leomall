@@ -59,6 +59,12 @@ spring:
             - Path=/swagger-ui/**
           filters:
             - StripPrefix=0
+        - id: product-admin
+          uri: lb://product-service
+          predicates:
+            - Path=/admin/api/v1/products/**,/admin/api/v1/brands/**,/admin/api/v1categories/**
+          filters:
+            - AuthFilter
 
   sentinel:
     transport:

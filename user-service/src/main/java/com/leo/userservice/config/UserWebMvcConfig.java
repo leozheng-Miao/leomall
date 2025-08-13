@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Configuration
 @RequiredArgsConstructor
-public class WebMvcConfig implements WebMvcConfigurer {
+public class UserWebMvcConfig implements WebMvcConfigurer {
 
     private final AuthenticationInterceptor authenticationInterceptor;
     private final LoginUserArgumentResolver loginUserArgumentResolver;
