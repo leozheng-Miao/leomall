@@ -39,13 +39,41 @@ public interface SecurityConstants {
      */
     String LOGIN_TIME = "loginTime";
 
+    /* ====================== 兼容别名（供现有代码使用） ====================== */
+
     /**
-     * Token前缀
+     * 兼容：Token 前缀（与 TokenConstants.PREFIX 一致）
      */
     String TOKEN_PREFIX = "Bearer ";
 
     /**
-     * Authorization Header
+     * 兼容：Token 查询参数名（与 TokenConstants.PARAM 一致）
+     * 用于 AuthInterceptor 从 request.getParameter(...) 取值
      */
+    String TOKEN_PARAM = "token";
+
+    /** 兼容：Authorization Header 名（与 TokenConstants.HEADER 一致） */
     String AUTHORIZATION_HEADER = "Authorization";
+
+    /* ====================== 角色/权限辅助 ====================== */
+
+    /**
+     * 匿名用户角色
+     */
+    String ROLE_ANONYMOUS = "ANONYMOUS";
+
+    /**
+     * 管理员角色
+     */
+    String ROLE_ADMIN = "ADMIN";
+
+    /**
+     * 普通用户角色
+     */
+    String ROLE_USER = "USER";
+
+    /**
+     * 权限前缀
+     */
+    String AUTHORITY_PREFIX = "PERM_";
 }

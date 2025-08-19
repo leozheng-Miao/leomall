@@ -1,11 +1,14 @@
 package com.leo.userservice.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leo.commoncore.constant.RedisConstants;
 import com.leo.commoncore.constant.TokenConstants;
 import com.leo.commoncore.enums.ResponseEnum;
 import com.leo.commoncore.exception.BizException;
 import com.leo.commonredis.util.RedisUtil;
+import com.leo.commonsecurity.domain.SecurityUser;
 import com.leo.commonsecurity.util.JwtUtil;
 import com.leo.userservice.converter.UserConverter;
 import com.leo.userservice.dto.response.TokenResponse;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +42,7 @@ public class TokenServiceImpl implements TokenService {
     private final RedisUtil redisUtil;
     private final UserMapper userMapper;
     private final UserConverter userConverter;
+    private final ObjectMapper objectMapper;
 
     @Override
     public TokenResponse createToken(User user, String deviceId, String deviceType, boolean rememberMe) {
@@ -70,8 +75,15 @@ public class TokenServiceImpl implements TokenService {
         String refreshTokenId = jwtUtil.getTokenId(refreshToken);
 
         // 存储Token信息到Redis（用于Token管理）
-        storeTokenInfo(accessTokenId, user.getId(), TokenConstants.TOKEN_TYPE_ACCESS, deviceId, deviceType);
-        storeTokenInfo(refreshTokenId, user.getId(), TokenConstants.TOKEN_TYPE_REFRESH, deviceId, deviceType);
+//        try {
+//
+//        } catch (Exception e) {
+//            log.error("存储Token信息失败", e);
+//        }
+//        storeTokenInfo(accessTokenId, user.getId(), TokenConstants.TOKEN_TYPE_ACCESS, deviceId, deviceType);
+//        storeTokenInfo(refreshTokenId, user.getId(), TokenConstants.TOKEN_TYPE_REFRESH, deviceId, deviceType);
+        storeTokenInfo(accessTokenId, user, roleList, permissionList, deviceId, deviceType, TokenConstants.TOKEN_TYPE_ACCESS);
+        storeTokenInfo(refreshTokenId, user, roleList, permissionList, deviceId, deviceType, TokenConstants.TOKEN_TYPE_REFRESH);
 
         // 缓存用户权限信息
         cacheUserPermissions(user.getId(), roleList, permissionList);
@@ -184,6 +196,7 @@ public class TokenServiceImpl implements TokenService {
      * 存储Token信息
      */
     private void storeTokenInfo(String tokenId, Long userId, String tokenType, String deviceId, String deviceType) {
+
         String key = "token:info:" + tokenId;
         Map<String, Object> info = new HashMap<>();
         info.put("userId", userId);
@@ -197,6 +210,36 @@ public class TokenServiceImpl implements TokenService {
                 : TokenConstants.REFRESH_TOKEN_EXPIRE;
         
         redisUtil.hmset(key, info, expireTime);
+    }
+
+    private void storeTokenInfo(String tokenId, User user,
+                                List<String> roleList, List<String> permissionList,
+                                String deviceId, String deviceType, String tokenType) {
+        String key = "token:info:" + tokenId;
+
+        SecurityUser securityUser = SecurityUser.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .userType(user.getUserType())
+                .roles(roleList)
+                .permissions(permissionList)
+                .loginTime(System.currentTimeMillis())
+                .loginDevice(deviceType)
+                .tokenId(tokenId)
+                .build();
+
+        // 存 JSON
+        String json = null;
+        try {
+            json = objectMapper.writeValueAsString(securityUser);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        long expireTime = TokenConstants.TOKEN_TYPE_ACCESS.equals(tokenType)
+                ? TokenConstants.ACCESS_TOKEN_EXPIRE
+                : TokenConstants.REFRESH_TOKEN_EXPIRE;
+
+        redisUtil.set(key, json, expireTime);
     }
 
     /**

@@ -46,6 +46,11 @@
             <groupId>com.leo</groupId>
             <artifactId>common-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.leo</groupId>
+            <artifactId>common-redis</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

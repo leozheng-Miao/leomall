@@ -5,6 +5,7 @@ import com.leo.commoncore.response.R;
 import com.leo.commonsecurity.annotation.CurrentUser;
 import com.leo.commonsecurity.annotation.RequireLogin;
 import com.leo.commonsecurity.annotation.RequirePermission;
+import com.leo.commonsecurity.context.AuthenticationContext;
 import com.leo.commonsecurity.domain.SecurityUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,6 +58,7 @@ public class TestAuthController {
     @RequireLogin
     @RequirePermission(PermissionConstants.USER_LIST)
     public R<String> userList(@CurrentUser SecurityUser user) {
+        System.out.println("进入 user-list 接口方法中");
         return R.success("用户 " + user.getUsername() + " 有用户列表权限");
     }
 

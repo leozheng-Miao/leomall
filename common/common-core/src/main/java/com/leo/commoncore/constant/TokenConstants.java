@@ -36,6 +36,11 @@ public interface TokenConstants {
     Long REFRESH_TOKEN_EXPIRE = 604800L;
 
     /**
+     * 刷新Token的时间阈值（秒） - 5分钟内即将过期则刷新
+     */
+    Long TOKEN_REFRESH_THRESHOLD = 300L;
+
+    /**
      * Token类型
      */
     String TOKEN_TYPE_ACCESS = "ACCESS";
@@ -47,8 +52,35 @@ public interface TokenConstants {
     String REDIS_TOKEN_PREFIX = "token:";
     String REDIS_TOKEN_BLACKLIST_PREFIX = "token:blacklist:";
     
+
+
     /**
-     * 刷新Token的时间阈值（秒） - 5分钟内即将过期则刷新
+     * JWT Claim - 过期时间
      */
-    Long TOKEN_REFRESH_THRESHOLD = 300L;
+    String CLAIM_EXPIRATION = "exp";
+
+    /**
+     * JWT Claim - 签发时间
+     */
+    String CLAIM_ISSUED_AT = "iat";
+
+    /**
+     * JWT Claim - 令牌ID
+     */
+    String CLAIM_JTI = "jti";
+
+    /**
+     * Redis 存储用户信息的Key前缀
+     */
+    String LOGIN_USER_PREFIX = "login_user:";
+
+    /**
+     * 默认字符编码
+     */
+    String DEFAULT_CHARSET = "UTF-8";
+
+    /**
+     * Content-Type JSON
+     */
+    String CONTENT_TYPE_JSON = "application/json;charset=UTF-8";
 }

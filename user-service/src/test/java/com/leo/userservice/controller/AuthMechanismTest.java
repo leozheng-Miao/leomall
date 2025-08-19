@@ -1,9 +1,11 @@
 package com.leo.userservice.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.leo.commoncore.constant.SecurityConstants;
 import com.leo.userservice.dto.request.LoginRequest;
 import com.leo.userservice.dto.request.RegisterRequest;
+import com.leo.userservice.dto.response.TokenResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,10 +36,10 @@ class AuthMechanismTest {
 
     @Autowired
     private MockMvc mockMvc;
-    
+
     @Autowired
     private ObjectMapper objectMapper;
-    
+
     private String accessToken;
     private String adminToken;
 
@@ -48,29 +50,69 @@ class AuthMechanismTest {
         registerRequest.setUsername("testuser");
         registerRequest.setPassword("Test@123");
         registerRequest.setConfirmPassword("Test@123");
-        
+
         mockMvc.perform(post("/api/v1/auth/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(registerRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk());
 
         // 登录获取Token
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setAccount("testuser");
         loginRequest.setPassword("Test@123");
-        
+
         MvcResult result = mockMvc.perform(post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andReturn();
-        
+
         // 解析Token
-        String responseBody = result.getResponse().getContentAsString();
-        // 这里简化处理，实际需要解析JSON获取accessToken
-        // accessToken = ...
-        
+        String body = result.getResponse().getContentAsString();
+        System.out.println("这里是setUp（）方法");
+        System.out.println("___________________________");
+        System.out.println(body);
+        JsonNode root = objectMapper.readTree(body);
+
+        // 防御性检查
+        if (root.path("code").asInt() != 200) {
+            throw new IllegalStateException("登录失败: " + body);
+        }
+
+        // 获取accessToken
+        // ✅ 关键：从 data.accessToken 取
+        this.accessToken = root.at("/data/accessToken").asText(null);
+        if (this.accessToken == null || this.accessToken.isEmpty()) {
+            throw new IllegalStateException("未解析到 accessToken: " + body);
+        }
+        System.out.println(accessToken);
+
+
         // TODO: 创建管理员用户并获取adminToken
+        RegisterRequest adminRegister = new RegisterRequest();
+        adminRegister.setUsername("admin1");
+        adminRegister.setPassword("Admin@123");
+        adminRegister.setConfirmPassword("Admin@123");
+
+        mockMvc.perform(post("/api/v1/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(adminRegister)))
+                .andExpect(status().isOk());
+
+        // 登录获取管理员 token
+        LoginRequest adminLogin = new LoginRequest();
+        adminLogin.setAccount("admin1");
+        adminLogin.setPassword("Admin@123");
+
+        MvcResult adminResult = mockMvc.perform(post("/api/v1/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(adminLogin)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JsonNode rootAdmin = objectMapper.readTree(adminResult.getResponse().getContentAsString());
+        this.adminToken = rootAdmin.at("/data/accessToken").asText();
+        
     }
 
     @Test
@@ -96,13 +138,11 @@ class AuthMechanismTest {
     void testLoginRequiredWithAuth() throws Exception {
         // 模拟网关传递的用户信息
         mockMvc.perform(get("/api/v1/test/login-required")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "testuser")
-                .header(SecurityConstants.USER_TYPE, "1")
-                .header(SecurityConstants.ROLES, "USER"))
+                        .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").value("登录成功，用户名：testuser"));
+
     }
 
     @Test
@@ -118,9 +158,7 @@ class AuthMechanismTest {
     @DisplayName("可选登录接口 - 已登录")
     void testLoginOptionalWithAuth() throws Exception {
         mockMvc.perform(get("/api/v1/test/login-optional")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "testuser")
-                .header(SecurityConstants.USER_TYPE, "1"))
+                        .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data").value("已登录用户：testuser"));
@@ -130,10 +168,7 @@ class AuthMechanismTest {
     @DisplayName("权限验证 - 无权限")
     void testPermissionDenied() throws Exception {
         mockMvc.perform(get("/api/v1/test/user-list")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "testuser")
-                .header(SecurityConstants.USER_TYPE, "1")
-                .header(SecurityConstants.PERMISSIONS, ""))
+                        .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(403));
     }
@@ -142,10 +177,7 @@ class AuthMechanismTest {
     @DisplayName("权限验证 - 有权限")
     void testPermissionGranted() throws Exception {
         mockMvc.perform(get("/api/v1/test/user-list")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "admin")
-                .header(SecurityConstants.USER_TYPE, "3")
-                .header(SecurityConstants.PERMISSIONS, "user:list,user:create"))
+                        .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200));
     }
@@ -154,28 +186,17 @@ class AuthMechanismTest {
     @DisplayName("获取当前用户信息")
     void testGetUserInfo() throws Exception {
         mockMvc.perform(get("/api/v1/test/user-info")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "testuser")
-                .header(SecurityConstants.USER_TYPE, "1")
-                .header(SecurityConstants.ROLES, "USER,VIP")
-                .header(SecurityConstants.PERMISSIONS, "user:view"))
+                        .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.data.userId").value(1))
-                .andExpect(jsonPath("$.data.username").value("testuser"))
-                .andExpect(jsonPath("$.data.userType").value(1))
-                .andExpect(jsonPath("$.data.roles[0]").value("USER"))
-                .andExpect(jsonPath("$.data.roles[1]").value("VIP"));
+                .andExpect(jsonPath("$.data.username").value("testuser"));
     }
 
     @Test
     @DisplayName("检查用户角色")
     void testCheckRole() throws Exception {
         mockMvc.perform(get("/api/v1/test/check-role")
-                .header(SecurityConstants.USER_ID, "1")
-                .header(SecurityConstants.USERNAME, "admin")
-                .header(SecurityConstants.USER_TYPE, "3")
-                .header(SecurityConstants.ROLES, "ADMIN,USER"))
+                        .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.data.isAdmin").value(true))

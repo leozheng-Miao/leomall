@@ -51,7 +51,8 @@ public class RedisConfig extends CachingConfigurerSupport {
 //        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 
         // 直接通过构造函数传入 ObjectMapper
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(buildObjectMapper(),Object.class);
+        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer =
+                new Jackson2JsonRedisSerializer<>(buildObjectMapper(),Object.class);
 
         StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
 

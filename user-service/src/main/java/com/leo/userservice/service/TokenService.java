@@ -1,6 +1,7 @@
 package com.leo.userservice.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.leo.userservice.dto.response.TokenResponse;
 import com.leo.userservice.entity.User;
 

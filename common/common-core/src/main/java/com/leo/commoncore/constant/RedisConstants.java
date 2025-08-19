@@ -38,6 +38,8 @@ public interface RedisConstants {
      * 验证码
      */
     String CAPTCHA_CODE = "captcha:";
+    String RATE_LIMIT_PREFIX = "ratelimit:";
+
 
     /**
      * 默认过期时间（秒）
