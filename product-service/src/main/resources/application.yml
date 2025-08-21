@@ -30,10 +30,10 @@ spring:
       timeout: 10s
 
   # Elasticsearch配置
-  elasticsearch:
-    uris: http://localhost:9200
-    connection-timeout: 10s
-    socket-timeout: 30s
+#  elasticsearch:
+#    uris: ${ES_URIS:http://localhost:9200}
+#    connection-timeout: 10s
+#    socket-timeout: 30s
 
   # Cloud配置
 #  cloud:
@@ -74,6 +74,15 @@ cache:
     expire-time: 86400  # 分类缓存24小时
   product:
     expire-time: 3600   # 商品缓存1小时
+
+#elasticsearch:
+#  host: ${ES_HOST:localhost}
+#  port: ${ES_PORT:9200}
+#  scheme: ${ES_SCHEME:http}
+#  username: ${ES_USERNAME:}
+#  password: ${ES_PASSWORD:}
+
+
 
 # Swagger配置
 #springdoc:

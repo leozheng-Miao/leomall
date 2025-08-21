@@ -103,6 +103,28 @@
             <version>1.9.20</version> <!-- 与 SpringDoc 兼容的版本即可 -->
         </dependency>
 
+        <!-- Elasticsearch Java Client（必加） -->
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>8.13.4</version>
+        </dependency>
+
+        <!-- Elasticsearch REST low-level client (runtime) -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>8.13.4</version>
+        </dependency>
+
+        <!-- 允许 Mockito mock final 类（测试范围） -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.leo</groupId>
             <artifactId>common-security</artifactId>
