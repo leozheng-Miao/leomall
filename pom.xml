@@ -57,6 +57,8 @@
 
         <jackson.version>2.16.1</jackson.version>
 
+        <bootstrap.version>3.1.8</bootstrap.version>
+
     </properties>
 
     <dependencyManagement>
@@ -185,6 +187,13 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+
+<!--            bootstrap 依赖-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>${bootstrap.version}</version>
             </dependency>
 
 

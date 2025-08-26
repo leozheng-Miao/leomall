@@ -1,0 +1,35 @@
+server:
+  port: 8004
+
+spring:
+  application:
+    name: mall-inventory-service
+
+  profiles:
+    active: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mall_inventory_system?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: clx740329
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+
+  cloud:
+
+    sentinel:
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD:localhost:8858}
+        port: 8719
+
+rocketmq:
+  name-server: ${ROCKETMQ_SERVER:localhost:9876}
+  producer:
+    group: inventory-producer-group
+    send-message-timeout: 3000
