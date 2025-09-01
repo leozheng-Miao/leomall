@@ -57,13 +57,29 @@ public interface PermissionConstants {
 
 
     // 订单管理
+
+    /** 查看订单列表 */
     String ORDER_LIST = "order:list";
+    /** 查看订单详情 */
     String ORDER_VIEW = "order:view";
-    String ORDER_CANCEL = "order:cancel";
+    /** 创建订单 */
+    String ORDER_CREATE = "order:create";
+    /** 更新订单 */
     String ORDER_UPDATE = "order:update";
-    String ORDER_SHIP = "order:ship";
+    /** 取消订单 */
+    String ORDER_CANCEL = "order:cancel";
+    /** 删除订单 */
+    String ORDER_DELETE = "order:delete";
+    /** 订单发货 */
+    String ORDER_DELIVER = "order:deliver";
+    /** 订单退款 */
     String ORDER_REFUND = "order:refund";
+    /** 订单统计 */
+    String ORDER_STATISTICS = "order:statistics";
+    /** 导出订单 */
     String ORDER_EXPORT = "order:export";
+    String ORDER_SHIP = "order:ship";
+
 
     // 系统管理
     String SYSTEM_CONFIG = "system:config";
